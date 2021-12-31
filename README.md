@@ -3,7 +3,7 @@
 
 The `n3o-tool` is a [dotnet tool](https://docs.microsoft.com/en-us/dotnet/core/tools/global-tools) that contains useful functionality for N3O customers and developers.
 
-To install the tool type `dotnet tool install n3o-tool` (add the `-g` option to install globally). You can then invoke `n3o-tool` to see a list of available commands.
+To install the tool type `dotnet tool install n3o-tool` (add the `-g` option to install globally). To update to the latest version once installed run `dotnet tool update n3o-tool` (add the `-g` option if global). Once installed you can invoke `n3o-tool` to see a list of available commands.
 
 ## Questions & Support
 For questions and support please visit the [N3O Support Centre](https://support.n3o.ltd/).
