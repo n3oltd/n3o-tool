@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-namespace N3O.Utilities {
+namespace N3O.Tool.Utilities {
     public class Shell {
         private static readonly ConcurrentBag<Process> Processes = new();
         private readonly ILogger _logger;

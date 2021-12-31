@@ -1,13 +1,13 @@
 ﻿using McMaster.Extensions.CommandLineUtils;
 using Microsoft.Extensions.Logging;
-using N3O.Utilities;
+using N3O.Tool.Utilities;
 using NSwag;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace N3O.Commands.Clients {
+namespace N3O.Tool.Commands.Clients {
     [Command("clients", Description = "Generate OpenAPI clients")]
     public partial class Clients : CommandLineCommand {
         private readonly ILogger _logger;

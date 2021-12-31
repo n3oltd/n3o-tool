@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace N3O.Commands.Clients {
+namespace N3O.Tool.Commands.Clients {
     public class PackageJson {
         public string Name { get; set; }
         public string Author { get; set; }

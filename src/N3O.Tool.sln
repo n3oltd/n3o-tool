@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "N3O", "N3O\N3O.csproj", "{1CCB4546-A7C6-44F9-9928-D1E8DE6930F1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "N3O.Tool", "N3O.Tool\N3O.Tool.csproj", "{1CCB4546-A7C6-44F9-9928-D1E8DE6930F1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,5 +1,5 @@
 ﻿using McMaster.Extensions.CommandLineUtils;
-using N3O.Utilities;
+using N3O.Tool.Utilities;
 using Spectre.Console;
 using System;
 using System.Reflection;

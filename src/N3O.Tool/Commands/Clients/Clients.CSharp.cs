@@ -4,7 +4,7 @@ using NSwag.CodeGeneration.CSharp;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace N3O.Commands.Clients {
+namespace N3O.Tool.Commands.Clients {
     public partial class Clients {
         private async Task GenerateCSharpClientAsync() {
             var openApiDocument = await GetOpenApiDocumentAsync();

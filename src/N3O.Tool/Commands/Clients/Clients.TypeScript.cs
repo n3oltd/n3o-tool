@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
-using N3O.Utilities;
+using N3O.Tool.Utilities;
 using Newtonsoft.Json;
 using NJsonSchema.CodeGeneration.TypeScript;
 using NSwag.CodeGeneration;
@@ -7,7 +7,7 @@ using NSwag.CodeGeneration.TypeScript;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace N3O.Commands.Clients {
+namespace N3O.Tool.Commands.Clients {
     public partial class Clients {
         private async Task GenerateTypeScriptClientAsync() {
             var openApiDocument = await GetOpenApiDocumentAsync();

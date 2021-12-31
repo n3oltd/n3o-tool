@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace N3O.Utilities {
+namespace N3O.Tool.Utilities {
     public static class EmbeddedResource {
         public static string Text(string embeddedFileName) {
             var assembly = Assembly.GetEntryAssembly();

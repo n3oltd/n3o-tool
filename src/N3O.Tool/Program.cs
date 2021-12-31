@@ -1,8 +1,8 @@
 ﻿using McMaster.Extensions.CommandLineUtils;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using N3O.Commands.Clients;
-using N3O.Utilities;
+using N3O.Tool.Commands.Clients;
+using N3O.Tool.Utilities;
 using System;
 
 namespace N3O {
