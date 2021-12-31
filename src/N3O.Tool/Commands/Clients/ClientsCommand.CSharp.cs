@@ -5,7 +5,7 @@ using System.IO;
 using System.Threading.Tasks;
 
 namespace N3O.Tool.Commands.Clients {
-    public partial class Clients {
+    public partial class ClientsCommand {
         private async Task GenerateCSharpClientAsync() {
             var openApiDocument = await GetOpenApiDocumentAsync();
 

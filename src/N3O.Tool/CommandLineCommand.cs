@@ -1,7 +1,7 @@
 ﻿using McMaster.Extensions.CommandLineUtils;
 using System.Threading.Tasks;
 
-namespace N3O {
+namespace N3O.Tool {
     public abstract class CommandLineCommand {
         [Option("-verbose", Description = "Show verbose output, useful for debugging")]
         public bool Verbose { get; set; }

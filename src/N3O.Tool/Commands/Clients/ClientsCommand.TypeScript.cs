@@ -8,7 +8,7 @@ using System.IO;
 using System.Threading.Tasks;
 
 namespace N3O.Tool.Commands.Clients {
-    public partial class Clients {
+    public partial class ClientsCommand {
         private async Task GenerateTypeScriptClientAsync() {
             var openApiDocument = await GetOpenApiDocumentAsync();
             
@@ -20,7 +20,7 @@ namespace N3O.Tool.Commands.Clients {
             settings.ClassName = Name;
             settings.ConfigurationClass = "IConfig";
             settings.ImportRequiredTypes = true;
-            settings.UseTransformOptionsMethod = true;
+            settings.UseTransformOptionsMethod = false;
                     
             settings.TypeScriptGeneratorSettings.TypeStyle = TypeScriptTypeStyle.Interface;
             settings.TypeScriptGeneratorSettings.ExportTypes = true;
@@ -36,22 +36,22 @@ namespace N3O.Tool.Commands.Clients {
         public void GenerateNpmPackage() {
             GeneratePackageJson();
             GenerateTsConfig();
-            File.WriteAllText(Path.Combine(OutputPath, "README.md"), "TODO");
+            File.WriteAllText(Path.Combine(OutputPath, "README.md"), PackageDescription);
             
-            _shell.Run("npm", "i -D shx", workingDirectory: OutputPath).WaitForExit();
-            _shell.Run("npm", "run prepack", workingDirectory: OutputPath).WaitForExit();
+            _shell.Run(@"C:\Program Files\nodejs\npm.cmd", "i -D shx", workingDirectory: OutputPath).WaitForExit();
+            _shell.Run(@"C:\Program Files\nodejs\npm.cmd", "run prepack", workingDirectory: OutputPath).WaitForExit();
 
             Directory.Delete(Path.Combine(OutputPath, "node_modules"), true);
         }
 
         private void GeneratePackageJson() {
-            var packageJson = JsonConvert.DeserializeObject<PackageJson>(EmbeddedResource.Text("package.json"));
+            var packageJson = Json.Deserialize<PackageJson>(EmbeddedResource.Text("package.json"));
 
-            packageJson.Name = $"@n3o/{PackageName}";
-            packageJson.Description = "TODO";
+            packageJson.Name = PackageName;
+            packageJson.Description = PackageDescription;
 
             var outputFile = Path.Combine(OutputPath, "package.json");
-            var outputContent = JsonConvert.SerializeObject(packageJson);
+            var outputContent = Json.Serialize(packageJson);
 
             _logger.LogDebug($"Wrote the following to {outputFile}");
             _logger.LogDebug(outputContent);
@@ -63,8 +63,8 @@ namespace N3O.Tool.Commands.Clients {
             var outputFile = Path.Combine(OutputPath, "tsconfig.json");
             var outputContent = EmbeddedResource.Text("tsconfig.json");
 
-            _logger?.LogDebug($"Wrote the following to {outputFile}");
-            _logger?.LogDebug(outputContent);
+            _logger.LogDebug($"Wrote the following to {outputFile}");
+            _logger.LogDebug(outputContent);
             
             File.WriteAllText(outputFile, outputContent);
         }
