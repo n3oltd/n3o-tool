@@ -24,17 +24,17 @@ namespace N3O.Tool.Commands.Clients {
         protected override async Task<int> OnExecuteAsync(CommandLineApplication app) {
             if (Language == "CSharp") {
                 if (string.IsNullOrWhiteSpace(Namespace)) {
-                    throw new ValidationException($"--namespace must be specified when generating C# clients");
+                    throw new ValidationException("--namespace must be specified when generating C# clients");
                 }
                 
                 await GenerateCSharpClientAsync();
             } else if (Language == "TypeScript") {
                 if (string.IsNullOrWhiteSpace(PackageName)) {
-                    throw new ValidationException($"--package-name must be specified when generating TypeScript clients");
+                    throw new ValidationException("--package-name must be specified when generating TypeScript clients");
                 }
                 
                 if (string.IsNullOrWhiteSpace(PackageDescription)) {
-                    throw new ValidationException($"--package-description must be specified when generating TypeScript clients");
+                    throw new ValidationException("--package-description must be specified when generating TypeScript clients");
                 }
                 
                 await GenerateTypeScriptClientAsync();
