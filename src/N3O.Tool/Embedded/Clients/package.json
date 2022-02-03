@@ -31,8 +31,7 @@
   "scripts": {
     "tsc": "tsc",
     "build": "tsc && shx cp -r esm dist && npm run minify",
-    "minify": "uglifyjs -c -m --comments --source-map \"content='./dist/index.js.map'\" -o ./dist/index.min.js ./dist/index.js",
-    "prepack": "npm install && npm run build"
+    "minify": "uglifyjs -c -m --comments --source-map \"content='./dist/index.js.map'\" -o ./dist/index.min.js ./dist/index.js"
   },
   "sideEffects": false,
   "dependencies": {}
