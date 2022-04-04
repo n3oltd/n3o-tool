@@ -38,8 +38,7 @@ namespace N3O.Tool.Commands.Clients {
             GenerateTsConfig();
             File.WriteAllText(Path.Combine(OutputPath, "README.md"), PackageDescription);
             
-            _shell.Run(@"C:\Program Files\nodejs\npm.cmd", "i -D shx", workingDirectory: OutputPath).WaitForExit();
-            _shell.Run(@"C:\Program Files\nodejs\npm.cmd", "run install", workingDirectory: OutputPath).WaitForExit();
+            _shell.Run(@"C:\Program Files\nodejs\npm.cmd", "install", workingDirectory: OutputPath).WaitForExit();
             _shell.Run(@"C:\Program Files\nodejs\npm.cmd", "run build", workingDirectory: OutputPath).WaitForExit();
 
             Directory.Delete(Path.Combine(OutputPath, "node_modules"), true);
