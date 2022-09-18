@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using N3O.Tool.Utilities;
 using NSwag;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -22,13 +23,13 @@ namespace N3O.Tool.Commands.Clients {
         }
         
         protected override async Task<int> OnExecuteAsync(CommandLineApplication app) {
-            if (Language == "CSharp") {
+            if (Language.Equals("CSharp", StringComparison.InvariantCultureIgnoreCase)) {
                 if (string.IsNullOrWhiteSpace(Namespace)) {
                     throw new ValidationException($"--namespace must be specified when generating C# clients");
                 }
-                
+
                 await GenerateCSharpClientAsync();
-            } else if (Language == "TypeScript") {
+            } else if (Language.Equals("TypeScript", StringComparison.InvariantCultureIgnoreCase)) {
                 if (string.IsNullOrWhiteSpace(PackageName)) {
                     throw new ValidationException($"--package-name must be specified when generating TypeScript clients");
                 }
