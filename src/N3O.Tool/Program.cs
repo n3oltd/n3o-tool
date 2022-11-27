@@ -6,40 +6,40 @@ using Spectre.Console;
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace N3O.Tool {
-    public class Program {
-        public static int Main(string[] args) {
-            try {
-                var services = new ServiceCollection()
-                               .AddSingleton<IConsole>(PhysicalConsole.Singleton)
-                               .AddSingleton<Shell>()
-                               .AddHttpClient()
-                               .AddLogging(opt => {
-                                   opt.AddDebug();
-                               })
-                               .BuildServiceProvider();
+namespace N3O.Tool; 
 
-                var app = new CommandLineApplication<Application>();
+public class Program {
+    public static int Main(string[] args) {
+        try {
+            var services = new ServiceCollection()
+                           .AddSingleton<IConsole>(PhysicalConsole.Singleton)
+                           .AddSingleton<Shell>()
+                           .AddHttpClient()
+                           .AddLogging(opt => {
+                               opt.AddDebug();
+                           })
+                           .BuildServiceProvider();
 
-                app.Conventions
-                   .UseDefaultConventions()
-                   .UseConstructorInjection(services);
+            var app = new CommandLineApplication<Application>();
 
-                return app.Execute(args);
-            } catch (Exception e) {
-                AnsiConsole.Foreground = Color.Red;
+            app.Conventions
+               .UseDefaultConventions()
+               .UseConstructorInjection(services);
 
-                if (e is ValidationException validationException) {
-                    AnsiConsole.WriteLine(validationException.Message);
-                } else {
-                    AnsiConsole.WriteLine($"Fatal error: {e.Message}");
-                    AnsiConsole.WriteLine(e.StackTrace);
-                }
+            return app.Execute(args);
+        } catch (Exception e) {
+            AnsiConsole.Foreground = Color.Red;
 
-                return -1;
-            } finally {
-                Shell.KillRunningProcesses();
+            if (e is ValidationException validationException) {
+                AnsiConsole.WriteLine(validationException.Message);
+            } else {
+                AnsiConsole.WriteLine($"Fatal error: {e.Message}");
+                AnsiConsole.WriteLine(e.StackTrace);
             }
+
+            return -1;
+        } finally {
+            Shell.KillRunningProcesses();
         }
     }
 }

@@ -4,27 +4,27 @@ using NSwag.CodeGeneration.CSharp;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace N3O.Tool.Commands.Clients {
-    public partial class ClientsCommand {
-        private async Task GenerateCSharpClientAsync() {
-            var openApiDocument = await GetOpenApiDocumentAsync();
+namespace N3O.Tool.Commands.Clients; 
 
-            var settings = new CSharpClientGeneratorSettings();
+public partial class ClientsCommand {
+    private async Task GenerateCSharpClientAsync() {
+        var openApiDocument = await GetOpenApiDocumentAsync();
 
-            settings.ClassName = Name;
-            settings.ExposeJsonSerializerSettings = true;
-            settings.GenerateClientInterfaces = true;
-            settings.GenerateDtoTypes = true;
+        var settings = new CSharpClientGeneratorSettings();
 
-            settings.CSharpGeneratorSettings.Namespace = Namespace;
-            settings.CSharpGeneratorSettings.JsonLibrary = CSharpJsonLibrary.NewtonsoftJson;
-            settings.CSharpGeneratorSettings.TypeNameGenerator = new CSharpTypeNameGenerator();
+        settings.ClassName = Name;
+        settings.ExposeJsonSerializerSettings = true;
+        settings.GenerateClientInterfaces = true;
+        settings.GenerateDtoTypes = true;
 
-            var generator = new CSharpClientGenerator(openApiDocument, settings);
+        settings.CSharpGeneratorSettings.Namespace = Namespace;
+        settings.CSharpGeneratorSettings.JsonLibrary = CSharpJsonLibrary.NewtonsoftJson;
+        settings.CSharpGeneratorSettings.TypeNameGenerator = new CSharpTypeNameGenerator();
+
+        var generator = new CSharpClientGenerator(openApiDocument, settings);
                     
-            var csClient = generator.GenerateFile(ClientGeneratorOutputType.Full);
+        var csClient = generator.GenerateFile(ClientGeneratorOutputType.Full);
 
-            await File.WriteAllTextAsync(Path.Combine(OutputPath, $"{Name}.cs"), csClient);
-        }
+        await File.WriteAllTextAsync(Path.Combine(OutputPath, $"{Name}.cs"), csClient);
     }
 }
