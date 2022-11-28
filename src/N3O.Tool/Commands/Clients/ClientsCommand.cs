@@ -16,7 +16,10 @@ public partial class ClientsCommand : CommandLineCommand {
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly Shell _shell;
 
-    public ClientsCommand(ILogger<ClientsCommand> logger, IConsole console, IHttpClientFactory httpClientFactory, Shell shell) {
+    public ClientsCommand(ILogger<ClientsCommand> logger,
+                          IConsole console,
+                          IHttpClientFactory httpClientFactory,
+                          Shell shell) {
         _logger = logger;
         _console = console;
         _httpClientFactory = httpClientFactory;
@@ -61,7 +64,7 @@ public partial class ClientsCommand : CommandLineCommand {
         return openApiDocument;
     }
 
-    [Option("--language", Description = "The language of the client, must be TypeScript or CSharp", ShowInHelpText = true)]
+    [Option("--language", Description = "The language of the client, must be one of typescript|csharp", ShowInHelpText = true)]
     [Required]
     public string Language { get; set; }
 

@@ -1,5 +1,6 @@
 ﻿using McMaster.Extensions.CommandLineUtils;
 using N3O.Tool.Commands.Clients;
+using N3O.Tool.Commands.Templates;
 using N3O.Tool.Utilities;
 using Spectre.Console;
 using System;
@@ -10,6 +11,7 @@ namespace N3O.Tool;
 
 [Command]
 [Subcommand(typeof(ClientsCommand))]
+[Subcommand(typeof(TemplatesCommand))]
 [VersionOptionFromMember("--version", MemberName = nameof(DisplayVersion))]
 public class Application : CommandLineCommand {
     protected override Task<int> OnExecuteAsync(CommandLineApplication app) {

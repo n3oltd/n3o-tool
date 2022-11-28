@@ -1,28 +1,27 @@
 ﻿using Microsoft.Extensions.Logging;
 using N3O.Tool.Utilities;
-using Newtonsoft.Json;
 using NJsonSchema.CodeGeneration.TypeScript;
 using NSwag.CodeGeneration;
 using NSwag.CodeGeneration.TypeScript;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace N3O.Tool.Commands.Clients; 
+namespace N3O.Tool.Commands.Clients;
 
 public partial class ClientsCommand {
     private async Task GenerateTypeScriptClientAsync() {
         var openApiDocument = await GetOpenApiDocumentAsync();
-            
+
         var srcFolder = Path.Combine(OutputPath, "src");
         Directory.CreateDirectory(srcFolder);
-            
+
         var settings = new TypeScriptClientGeneratorSettings();
 
         settings.ClassName = Name;
         settings.ConfigurationClass = "IConfig";
         settings.ImportRequiredTypes = true;
         settings.UseTransformOptionsMethod = false;
-                    
+
         settings.TypeScriptGeneratorSettings.TypeStyle = TypeScriptTypeStyle.Interface;
         settings.TypeScriptGeneratorSettings.ExportTypes = true;
 
@@ -33,12 +32,12 @@ public partial class ClientsCommand {
 
         GenerateNpmPackage();
     }
-        
+
     public void GenerateNpmPackage() {
         GeneratePackageJson();
         GenerateTsConfig();
         File.WriteAllText(Path.Combine(OutputPath, "README.md"), PackageDescription);
-            
+
         _shell.Run(@"C:\Program Files\nodejs\npm.cmd", "install", workingDirectory: OutputPath).WaitForExit();
         _shell.Run(@"C:\Program Files\nodejs\npm.cmd", "run build", workingDirectory: OutputPath).WaitForExit();
 
@@ -66,7 +65,7 @@ public partial class ClientsCommand {
 
         _logger.LogDebug($"Wrote the following to {outputFile}");
         _logger.LogDebug(outputContent);
-            
+
         File.WriteAllText(outputFile, outputContent);
     }
 }
