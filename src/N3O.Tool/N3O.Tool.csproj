@@ -27,7 +27,7 @@
         <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
         <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="7.0.0" />
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
-        <PackageReference Include="NSwag.CodeGeneration.CSharp" Version="13.18.0" />
+        <PackageReference Include="NSwag.CodeGeneration.CSharp" Version="13.18.2" />
         <PackageReference Include="NSwag.CodeGeneration.TypeScript" Version="13.18.0" />
         <PackageReference Include="Spectre.Console" Version="0.46.0" />
     </ItemGroup>
