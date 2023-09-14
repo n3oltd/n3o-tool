@@ -1,4 +1,5 @@
 ﻿using McMaster.Extensions.CommandLineUtils;
+using N3O.Tool.Commands;
 using N3O.Tool.Commands.Clients;
 using N3O.Tool.Commands.Templates;
 using N3O.Tool.Utilities;
@@ -12,6 +13,7 @@ namespace N3O.Tool;
 [Command]
 [Subcommand(typeof(ClientsCommand))]
 [Subcommand(typeof(TemplatesCommand))]
+[Subcommand(typeof(PrePackCommand))]
 [VersionOptionFromMember("--version", MemberName = nameof(DisplayVersion))]
 public class Application : CommandLineCommand {
     protected override Task<int> OnExecuteAsync(CommandLineApplication app) {
