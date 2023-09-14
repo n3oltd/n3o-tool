@@ -1,17 +1,16 @@
-﻿namespace N3O.Tool.Utilities; 
-
-
-using System;
+﻿using System;
 using System.IO;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using System.Linq;
 using System.Collections.Generic;
 
+namespace N3O.Tool.Utilities; 
+
 /// <summary>
 /// Without this code, package references from the other project are not applied to the package (they are simply ignored).
 /// 
-/// Many thanks to @WallaceKelly for comming up with a bundling solution (modify the .csproj file with the following parameters):
+/// Many thanks to @WallaceKelly for coming up with a bundling solution (modify the .csproj file with the following parameters):
 ///
 ///  <PropertyGroup>
 ///    <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>

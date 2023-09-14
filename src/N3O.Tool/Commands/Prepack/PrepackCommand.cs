@@ -10,13 +10,13 @@ using System.Threading.Tasks;
 namespace N3O.Tool.Commands; 
 
 [Command("prepack", Description = "Prepares .csproj files for packing by adding any transitive NuGet references")]
-public class PrePackCommand : CommandLineCommand{
+public class PrepackCommand : CommandLineCommand {
     [Option("-p|--path", Description = "The root folder for the project, if not specified defaults to current folder", ShowInHelpText = true)]
     public string ProjectPath { get; set; }
     
     private readonly ILogger _logger;
 
-    public PrePackCommand(ILogger<ClientsCommand> logger) {
+    public PrepackCommand(ILogger<ClientsCommand> logger) {
         _logger = logger;
     }
 

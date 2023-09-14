@@ -12,8 +12,8 @@ namespace N3O.Tool;
 
 [Command]
 [Subcommand(typeof(ClientsCommand))]
+[Subcommand(typeof(PrepackCommand))]
 [Subcommand(typeof(TemplatesCommand))]
-[Subcommand(typeof(PrePackCommand))]
 [VersionOptionFromMember("--version", MemberName = nameof(DisplayVersion))]
 public class Application : CommandLineCommand {
     protected override Task<int> OnExecuteAsync(CommandLineApplication app) {
