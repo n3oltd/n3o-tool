@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using N3O.Tool.Commands.Clients;
 using N3O.Tool.Utilities;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -26,7 +27,8 @@ public class PrepackCommand : CommandLineCommand {
 
         foreach (var file in projectFiles) {
             _logger.LogInformation($"Processing {file.FullName}");
-
+            
+            Console.WriteLine($"Pre-packing - {file.FullName}");
             DotnetPackerStandalone.UpdateProject(file.FullName);
         }
 
