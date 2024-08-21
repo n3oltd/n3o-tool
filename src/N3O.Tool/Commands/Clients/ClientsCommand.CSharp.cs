@@ -15,7 +15,7 @@ public partial class ClientsCommand {
         settings.ClassName = Name;
         settings.ExposeJsonSerializerSettings = true;
         settings.GenerateClientInterfaces = true;
-        settings.GenerateDtoTypes = true;
+        settings.GenerateDtoTypes = GenerateModels;
         settings.CSharpGeneratorSettings.GenerateOptionalPropertiesAsNullable = true;
 
         settings.CSharpGeneratorSettings.Namespace = Namespace;

@@ -63,6 +63,9 @@ public partial class ClientsCommand : CommandLineCommand {
 
         return openApiDocument;
     }
+    
+    [Option("--generate-models", Description = "Specify whether models should be generated or not", ShowInHelpText = true)]
+    public bool GenerateModels { get; set; } = true;
 
     [Option("--language", Description = "The language of the client, must be one of typescript|csharp", ShowInHelpText = true)]
     [Required]
