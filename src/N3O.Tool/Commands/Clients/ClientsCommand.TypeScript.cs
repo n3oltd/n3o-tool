@@ -22,7 +22,7 @@ public partial class ClientsCommand {
         settings.ImportRequiredTypes = true;
         settings.UseTransformOptionsMethod = false;
 
-        settings.TypeScriptGeneratorSettings.ExcludedTypeNames = ExcludeModels.Split('|');
+        settings.TypeScriptGeneratorSettings.ExcludedTypeNames = ExcludeModels?.Split('|') ?? [];
         settings.TypeScriptGeneratorSettings.TypeStyle = TypeScriptTypeStyle.Interface;
         settings.TypeScriptGeneratorSettings.ExportTypes = true;
 

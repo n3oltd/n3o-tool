@@ -16,7 +16,7 @@ public partial class ClientsCommand {
         settings.ExposeJsonSerializerSettings = true;
         settings.GenerateClientInterfaces = true;
         settings.GenerateDtoTypes = GenerateModels;
-        settings.CSharpGeneratorSettings.ExcludedTypeNames = ExcludeModels.Split('|');
+        settings.CSharpGeneratorSettings.ExcludedTypeNames = ExcludeModels?.Split('|') ?? [];
         settings.CSharpGeneratorSettings.GenerateOptionalPropertiesAsNullable = true;
 
         settings.CSharpGeneratorSettings.Namespace = Namespace;
