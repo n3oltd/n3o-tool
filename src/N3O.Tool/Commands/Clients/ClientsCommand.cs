@@ -66,6 +66,9 @@ public partial class ClientsCommand : CommandLineCommand {
     
     [Option("--generate-models", Description = "Specify whether models should be generated or not", ShowInHelpText = true)]
     public bool GenerateModels { get; set; } = true;
+    
+    [Option("--exclude-models", Description = "Specify which models should be excluded (split using | )", ShowInHelpText = true)]
+    public string ExcludeModels { get; set; }
 
     [Option("--language", Description = "The language of the client, must be one of typescript|csharp", ShowInHelpText = true)]
     [Required]
