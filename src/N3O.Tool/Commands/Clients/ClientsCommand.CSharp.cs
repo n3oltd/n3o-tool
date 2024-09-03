@@ -15,7 +15,7 @@ public partial class ClientsCommand {
         settings.ClassName = Name;
         settings.ExposeJsonSerializerSettings = true;
         settings.GenerateClientInterfaces = true;
-        settings.GenerateDtoTypes = GenerateModels;
+        settings.GenerateDtoTypes = !NoModels;
         settings.CSharpGeneratorSettings.ExcludedTypeNames = ExcludeModels?.Split('|') ?? [];
         settings.CSharpGeneratorSettings.GenerateOptionalPropertiesAsNullable = true;
 
@@ -24,7 +24,7 @@ public partial class ClientsCommand {
         settings.CSharpGeneratorSettings.TypeNameGenerator = new CSharpTypeNameGenerator();
 
         var generator = new CSharpClientGenerator(openApiDocument, settings);
-                    
+        
         var csClient = generator.GenerateFile(ClientGeneratorOutputType.Full);
 
         await File.WriteAllTextAsync(Path.Combine(OutputPath, $"{Name}.cs"), csClient);
