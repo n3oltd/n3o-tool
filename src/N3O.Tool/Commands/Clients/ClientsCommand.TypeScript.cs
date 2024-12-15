@@ -12,7 +12,7 @@ public partial class ClientsCommand {
     private async Task GenerateTypeScriptClientAsync() {
         var openApiDocument = await GetOpenApiDocumentAsync();
 
-        var srcFolder = Path.Combine(OutputPath, "src");
+        var srcFolder = System.IO.Path.Combine(OutputPath, "src");
         Directory.CreateDirectory(srcFolder);
 
         var settings = new TypeScriptClientGeneratorSettings();
@@ -29,7 +29,7 @@ public partial class ClientsCommand {
         var generator = new TypeScriptClientGenerator(openApiDocument, settings);
 
         var tsMain = generator.GenerateFile(ClientGeneratorOutputType.Full);
-        await File.WriteAllTextAsync(Path.Combine(srcFolder, "index.ts"), tsMain);
+        await File.WriteAllTextAsync(System.IO.Path.Combine(srcFolder, "index.ts"), tsMain);
 
         GenerateNpmPackage();
     }
@@ -37,12 +37,12 @@ public partial class ClientsCommand {
     public void GenerateNpmPackage() {
         GeneratePackageJson();
         GenerateTsConfig();
-        File.WriteAllText(Path.Combine(OutputPath, "README.md"), PackageDescription);
+        File.WriteAllText(System.IO.Path.Combine(OutputPath, "README.md"), PackageDescription);
 
         _shell.Run(@"C:\Program Files\nodejs\npm.cmd", "install", workingDirectory: OutputPath).WaitForExit();
         _shell.Run(@"C:\Program Files\nodejs\npm.cmd", "run build", workingDirectory: OutputPath).WaitForExit();
 
-        Directory.Delete(Path.Combine(OutputPath, "node_modules"), true);
+        Directory.Delete(System.IO.Path.Combine(OutputPath, "node_modules"), true);
     }
 
     private void GeneratePackageJson() {
@@ -51,7 +51,7 @@ public partial class ClientsCommand {
         packageJson.Name = PackageName;
         packageJson.Description = PackageDescription;
 
-        var outputFile = Path.Combine(OutputPath, "package.json");
+        var outputFile = System.IO.Path.Combine(OutputPath, "package.json");
         var outputContent = Json.Serialize(packageJson);
 
         _logger.LogDebug($"Wrote the following to {outputFile}");
@@ -61,7 +61,7 @@ public partial class ClientsCommand {
     }
 
     private void GenerateTsConfig() {
-        var outputFile = Path.Combine(OutputPath, "tsconfig.json");
+        var outputFile = System.IO.Path.Combine(OutputPath, "tsconfig.json");
         var outputContent = EmbeddedResource.Text("tsconfig.json");
 
         _logger.LogDebug($"Wrote the following to {outputFile}");

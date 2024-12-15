@@ -4,6 +4,7 @@ using N3O.Tool.Utilities;
 using NSwag;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -27,19 +28,27 @@ public partial class ClientsCommand : CommandLineCommand {
     }
 
     protected override async Task<int> OnExecuteAsync(CommandLineApplication app) {
+        if (string.IsNullOrWhiteSpace(Path) && string.IsNullOrWhiteSpace(Url)) {
+            throw new ValidationException("Either --path or --url must be specified");
+        }
+        
+        if (!string.IsNullOrWhiteSpace(Path) && !string.IsNullOrWhiteSpace(Url)) {
+            throw new ValidationException("Both --path or --url cannot be specified");
+        }
+        
         if (Language.Equals("CSharp", StringComparison.InvariantCultureIgnoreCase)) {
             if (string.IsNullOrWhiteSpace(Namespace)) {
-                throw new ValidationException($"--namespace must be specified when generating C# clients");
+                throw new ValidationException("--namespace must be specified when generating C# clients");
             }
 
             await GenerateCSharpClientAsync();
         } else if (Language.Equals("TypeScript", StringComparison.InvariantCultureIgnoreCase)) {
             if (string.IsNullOrWhiteSpace(PackageName)) {
-                throw new ValidationException($"--package-name must be specified when generating TypeScript clients");
+                throw new ValidationException("--package-name must be specified when generating TypeScript clients");
             }
 
             if (string.IsNullOrWhiteSpace(PackageDescription)) {
-                throw new ValidationException($"--package-description must be specified when generating TypeScript clients");
+                throw new ValidationException("--package-description must be specified when generating TypeScript clients");
             }
 
             await GenerateTypeScriptClientAsync();
@@ -51,12 +60,18 @@ public partial class ClientsCommand : CommandLineCommand {
     }
 
     private async Task<OpenApiDocument> GetOpenApiDocumentAsync() {
-        _console.WriteLine($"Downloading {Url}");
+        string json;
+        
+        if (string.IsNullOrWhiteSpace(Url)) {
+            json = await File.ReadAllTextAsync(Path);
+        } else {
+            _console.WriteLine($"Downloading {Url}");
 
-        var httpClient = _httpClientFactory.CreateClient();
+            var httpClient = _httpClientFactory.CreateClient();
 
-        var json = await httpClient.GetStringAsync(Url);
-
+            json = await httpClient.GetStringAsync(Url);
+        }
+        
         _logger.LogDebug("Fetched {Json}", json);
 
         var openApiDocument = await OpenApiDocument.FromJsonAsync(json);
@@ -91,7 +106,9 @@ public partial class ClientsCommand : CommandLineCommand {
     [Option("--package-name", Description = "The npm package name (when generating TypeScript clients)", ShowInHelpText = true)]
     public string PackageName { get; set; }
 
+    [Option("--path", Description = "The full path of the OpenAPI JSON file", ShowInHelpText = true)]
+    public string Path { get; set; }
+    
     [Option("--url", Description = "The full URL of the OpenAPI JSON file", ShowInHelpText = true)]
-    [Required]
     public string Url { get; set; }
 }

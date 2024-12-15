@@ -27,6 +27,6 @@ public partial class ClientsCommand {
         
         var csClient = generator.GenerateFile(ClientGeneratorOutputType.Full);
 
-        await File.WriteAllTextAsync(Path.Combine(OutputPath, $"{Name}.cs"), csClient);
+        await File.WriteAllTextAsync(System.IO.Path.Combine(OutputPath, $"{Name}.cs"), csClient);
     }
 }
