@@ -22,11 +22,11 @@
         <PackageReference Include="Flurl" Version="4.0.0" />
         <PackageReference Include="McMaster.Extensions.CommandLineUtils" Version="4.1.1" />
         <PackageReference Include="McMaster.Extensions.Hosting.CommandLine" Version="4.1.1" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.2" />
         <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.1" />
-        <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.1" />
+        <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.2" />
         <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="8.0.1" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.1" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.2" />
         <PackageReference Include="NSwag.CodeGeneration.CSharp" Version="14.2.0" />
         <PackageReference Include="NSwag.CodeGeneration.TypeScript" Version="14.2.0" />
         <PackageReference Include="Spectre.Console" Version="0.49.1" />
