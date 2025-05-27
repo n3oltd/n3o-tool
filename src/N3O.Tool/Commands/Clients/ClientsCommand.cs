@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using N3O.Tool.Utilities;
 using NSwag;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Net.Http;
@@ -69,7 +70,23 @@ public partial class ClientsCommand : CommandLineCommand {
 
             var httpClient = _httpClientFactory.CreateClient();
 
-            json = await httpClient.GetStringAsync(Url);
+            var request = new HttpRequestMessage(HttpMethod.Get, Url);
+
+            if (Headers != null) {
+                foreach (var header in Headers) {
+                    var firstColon = header.IndexOf(':');
+                    var name = header.Substring(0, firstColon).Trim();
+                    var value = header.Substring(firstColon + 1).Trim();
+
+                    request.Headers.Add(name, value);
+                }
+            }
+            
+            var response = await httpClient.SendAsync(request);
+
+            response.EnsureSuccessStatusCode();
+            
+            json = await response.Content.ReadAsStringAsync();
         }
         
         _logger.LogDebug("Fetched {Json}", json);
@@ -79,11 +96,11 @@ public partial class ClientsCommand : CommandLineCommand {
         return openApiDocument;
     }
     
-    [Option("--no-models", Description = "Specifies whether models should be generated or not", ShowInHelpText = true)]
-    public bool NoModels { get; set; }
-    
     [Option("--exclude-models", Description = "Specify which models should be excluded (split using | )", ShowInHelpText = true)]
     public string ExcludeModels { get; set; }
+    
+    [Option("--header", Description = "Specifies one ore more headers to be sent with the HTTP request when downloading the OpenAPI JSON (format is name: value)", ShowInHelpText = true)]
+    public IEnumerable<string> Headers { get; set; }
 
     [Option("--language", Description = "The language of the client, must be one of typescript|csharp", ShowInHelpText = true)]
     [Required]
@@ -96,6 +113,9 @@ public partial class ClientsCommand : CommandLineCommand {
     [Option("--namespace", Description = "The namespace of the client (when generating C# clients)", ShowInHelpText = true)]
     public string Namespace { get; set; }
 
+    [Option("--no-models", Description = "Specifies whether models should be generated or not", ShowInHelpText = true)]
+    public bool NoModels { get; set; }
+    
     [Option("--output-path", Description = "The output path for the generated client", ShowInHelpText = true)]
     [Required]
     public string OutputPath { get; set; }
