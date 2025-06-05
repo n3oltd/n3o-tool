@@ -34,6 +34,7 @@
 
     <ItemGroup>
         <EmbeddedResource Include="Embedded\speed.flf" />
+        <EmbeddedResource Include="Embedded\Clients\ConnectApiBase.ts" />
         <EmbeddedResource Include="Embedded\Clients\package.json" />
         <EmbeddedResource Include="Embedded\Clients\tsconfig.json" />
     </ItemGroup>

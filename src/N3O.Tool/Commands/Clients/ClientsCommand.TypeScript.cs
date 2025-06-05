@@ -9,26 +9,35 @@ using System.Threading.Tasks;
 namespace N3O.Tool.Commands.Clients;
 
 public partial class ClientsCommand {
-    private async Task GenerateTypeScriptClientAsync() {
-        var openApiDocument = await GetOpenApiDocumentAsync();
+    private async Task GenerateTypeScriptClientAsync(bool connectApi) {
+        var openApiDocument = await GetOpenApiDocumentAsync("2");
 
         var srcFolder = System.IO.Path.Combine(OutputPath, "src");
         Directory.CreateDirectory(srcFolder);
 
         var settings = new TypeScriptClientGeneratorSettings();
 
-        settings.ClassName = Name;
-        settings.ConfigurationClass = "IConfig";
         settings.ImportRequiredTypes = true;
-        settings.UseTransformOptionsMethod = false;
-
+        
         settings.TypeScriptGeneratorSettings.ExcludedTypeNames = ExcludeModels?.Split('|') ?? [];
-        settings.TypeScriptGeneratorSettings.TypeStyle = TypeScriptTypeStyle.Interface;
         settings.TypeScriptGeneratorSettings.ExportTypes = true;
+        settings.TypeScriptGeneratorSettings.TypeStyle = TypeScriptTypeStyle.Interface;
+        
+        if (connectApi) {
+            settings.ClientBaseClass = "ConnectApiBase";
+            settings.ConfigurationClass = "IApiHeaders";
+            settings.UseTransformOptionsMethod = true;
+            
+            settings.TypeScriptGeneratorSettings.ExtensionCode = EmbeddedResource.Text("ConnectApiBase.ts");
+        } else {
+            settings.ConfigurationClass = "IApiConfiguration";
+            settings.UseTransformOptionsMethod = false;
+        }
 
         var generator = new TypeScriptClientGenerator(openApiDocument, settings);
 
         var tsMain = generator.GenerateFile(ClientGeneratorOutputType.Full);
+        
         await File.WriteAllTextAsync(System.IO.Path.Combine(srcFolder, "index.ts"), tsMain);
 
         GenerateNpmPackage();

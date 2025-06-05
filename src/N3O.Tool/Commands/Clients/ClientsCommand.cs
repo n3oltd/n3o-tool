@@ -52,7 +52,7 @@ public partial class ClientsCommand : CommandLineCommand {
                 throw new ValidationException("--package-description must be specified when generating TypeScript clients");
             }
 
-            await GenerateTypeScriptClientAsync();
+            await GenerateTypeScriptClientAsync(ConnectApi);
         } else {
             throw new ValidationException("Invalid language specified");
         }
@@ -60,7 +60,7 @@ public partial class ClientsCommand : CommandLineCommand {
         return 0;
     }
 
-    private async Task<OpenApiDocument> GetOpenApiDocumentAsync() {
+    private async Task<OpenApiDocument> GetOpenApiDocumentAsync(string clientLanguageCode) {
         string json;
         
         if (string.IsNullOrWhiteSpace(Url)) {
@@ -72,14 +72,23 @@ public partial class ClientsCommand : CommandLineCommand {
 
             var request = new HttpRequestMessage(HttpMethod.Get, Url);
 
-            if (Headers != null) {
-                foreach (var header in Headers) {
-                    var firstColon = header.IndexOf(':');
-                    var name = header.Substring(0, firstColon).Trim();
-                    var value = header.Substring(firstColon + 1).Trim();
+            var headers = new Dictionary<string, string>();
+            
+            foreach (var header in Headers ?? []) {
+                var firstColon = header.IndexOf(':');
+                var name = header.Substring(0, firstColon).Trim();
+                var value = header.Substring(firstColon + 1).Trim();
 
-                    request.Headers.Add(name, value);
-                }
+                headers.Add(name, value);
+            }
+
+            if (ConnectApi) {
+                headers["N3O-Swagger-ApiPlatform"] = "3";
+                headers["N3O-Swagger-ClientLanguage"] = clientLanguageCode;
+            }
+
+            foreach (var (key, value) in headers) {
+                request.Headers.Add(key, value);
             }
             
             var response = await httpClient.SendAsync(request);
@@ -95,6 +104,9 @@ public partial class ClientsCommand : CommandLineCommand {
 
         return openApiDocument;
     }
+
+    [Option("--connect-api", Description = "Specifies whether clients are being generated for the N3O Connect API", ShowInHelpText = true)]
+    public bool ConnectApi { get; set; }
     
     [Option("--exclude-models", Description = "Specify which models should be excluded (split using | )", ShowInHelpText = true)]
     public string ExcludeModels { get; set; }
