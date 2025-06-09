@@ -83,8 +83,8 @@ public partial class ClientsCommand : CommandLineCommand {
             }
 
             if (ConnectApi) {
-                headers["N3O-Swagger-ApiPlatform"] = "3";
-                headers["N3O-Swagger-ClientLanguage"] = clientLanguageCode;
+                headers["N3O-OpenApi-ApiPlatform"] = "3";
+                headers["N3O-OpenApi-ClientLanguage"] = clientLanguageCode;
             }
 
             foreach (var (key, value) in headers) {
