@@ -64,17 +64,19 @@ public partial class ClientsCommand : CommandLineCommand {
         return 0;
     }
 
-    private async Task<OpenApiDocument> GetOpenApiDocumentAsync(string clientLanguageCode) {
+    private Task<OpenApiDocument> GetOpenApiDocumentAsync(string clientLanguageCode) {
+        return GetOpenApiDocumentAsync(Url ?? Path, clientLanguageCode);
+    }
+
+    private async Task<OpenApiDocument> GetOpenApiDocumentAsync(string urlOrPath, string clientLanguageCode) {
         string json;
         
-        if (string.IsNullOrWhiteSpace(Url)) {
-            json = await File.ReadAllTextAsync(Path);
-        } else {
-            _console.WriteLine($"Downloading {Url}");
+        if (Uri.TryCreate(urlOrPath, UriKind.Absolute, out var url)) {
+            _console.WriteLine($"Downloading {url}");
 
             var httpClient = _httpClientFactory.CreateClient();
 
-            var request = new HttpRequestMessage(HttpMethod.Get, Url);
+            var request = new HttpRequestMessage(HttpMethod.Get, url);
 
             var headers = new Dictionary<string, string>();
             
@@ -100,6 +102,8 @@ public partial class ClientsCommand : CommandLineCommand {
             response.EnsureSuccessStatusCode();
             
             json = await response.Content.ReadAsStringAsync();
+        } else {
+            json = await File.ReadAllTextAsync(urlOrPath);
         }
         
         _logger.LogDebug("Fetched {Json}", json);
@@ -111,6 +115,9 @@ public partial class ClientsCommand : CommandLineCommand {
 
     [Option("--connect-api", Description = "Specifies whether clients are being generated for the N3O Connect API", ShowInHelpText = true)]
     public bool ConnectApi { get; set; }
+    
+    [Option("--exclude-models-from", Description = "Specify one or more URLs whose models should be excluded (split using | )", ShowInHelpText = true)]
+    public string ExcludeModelsFrom { get; set; }
     
     [Option("--exclude-models", Description = "Specify which models should be excluded (split using | )", ShowInHelpText = true)]
     public string ExcludeModels { get; set; }

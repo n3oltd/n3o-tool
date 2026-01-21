@@ -1,6 +1,5 @@
-﻿using NJsonSchema;
+﻿using N3O.Tool.Extensions;
 using NJsonSchema.CodeGeneration.CSharp;
-using NSwag;
 using NSwag.CodeGeneration;
 using NSwag.CodeGeneration.CSharp;
 using System.Collections.Generic;
@@ -18,12 +17,14 @@ public partial class ClientsCommand {
 
         var typesToRemove = new List<string>();
         
-        if (IncludeModels?.Split('|').Any() == true) {
-            var schemas = openApiDocument.Components.Schemas;
+        if (IncludeModels.HasValue()) {
+            var includeModels = IncludeModels.SplitArgs();
             
-            typesToRemove = schemas.Keys.Where(k => !IncludeModels.Split('|').Contains(k)).ToList();
-        } else if (ExcludeModels?.Split('|').Any() == true) {
-            typesToRemove.AddRange(ExcludeModels.Split('|'));
+            typesToRemove.AddRange(openApiDocument.Components.Schemas.Keys.Where(k => !includeModels.Contains(k)));
+        } else if (ExcludeModels.HasValue() || ExcludeModelsFrom.HasValue()) {
+            var toExclude = await GetTypesToExcludeAsync();
+            
+            typesToRemove.AddRange(ExcludeModels.SplitArgs().Concat(toExclude).Distinct());
         }
         
         settings.ClassName = Name;
@@ -43,53 +44,15 @@ public partial class ClientsCommand {
 
         await File.WriteAllTextAsync(System.IO.Path.Combine(OutputPath, $"{Name}.cs"), csClient);
     }
-    
-    private static HashSet<string> CollectSchemasWithDependencies(
-        OpenApiDocument document,
-        IEnumerable<string> rootSchemas) {
+    private async Task<IReadOnlyList<string>> GetTypesToExcludeAsync() {
+        var toExclude = new List<string>();
+        
+        foreach (var url in ExcludeModelsFrom.SplitArgs()) {
+            var openApiDocument = await GetOpenApiDocumentAsync(url, "1");
 
-        var result = new HashSet<string>(rootSchemas);
-        var queue = new Queue<string>(rootSchemas);
-
-        while (queue.Count > 0) {
-            var current = queue.Dequeue();
-
-            if (!document.Components.Schemas.TryGetValue(current, out var schema)) {
-                continue;
-            }
-
-            foreach (var referenced in GetReferencedSchemas(schema)) {
-                if (result.Add(referenced)) {
-                    queue.Enqueue(referenced);
-                }
-            }
+            toExclude.AddRange(openApiDocument.Components.Schemas.Keys);
         }
 
-        return result;
-    }
-
-    private static IEnumerable<string> GetReferencedSchemas(JsonSchema schema) {
-        var referencedSchemas = new List<JsonSchema>();
-
-        if (schema.Reference != null)
-            referencedSchemas.Add(schema.Reference);
-
-        referencedSchemas.AddRange(schema.AllOf);
-        referencedSchemas.AddRange(schema.OneOf);
-        referencedSchemas.AddRange(schema.AnyOf);
-
-        foreach (var property in schema.Properties.Values) {
-            if (property.Reference != null)
-                referencedSchemas.Add(property.Reference);
-
-            referencedSchemas.AddRange(property.AllOf);
-            referencedSchemas.AddRange(property.OneOf);
-            referencedSchemas.AddRange(property.AnyOf);
-        }
-
-        return referencedSchemas
-              .Where(s => s?.Title != null)
-              .Select(s => s.Title!)
-              .Distinct();
+        return toExclude.Distinct().ToList();
     }
 }
