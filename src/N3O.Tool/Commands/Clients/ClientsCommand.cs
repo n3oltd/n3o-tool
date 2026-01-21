@@ -37,6 +37,10 @@ public partial class ClientsCommand : CommandLineCommand {
             throw new ValidationException("Both --path or --url cannot be specified");
         }
         
+        if (!string.IsNullOrWhiteSpace(ExcludeModels) && !string.IsNullOrWhiteSpace(IncludeModels)) {
+            throw new ValidationException("Both --exclude-models or --include-models cannot be specified");
+        }
+        
         if (Language.Equals("CSharp", StringComparison.InvariantCultureIgnoreCase)) {
             if (string.IsNullOrWhiteSpace(Namespace)) {
                 throw new ValidationException("--namespace must be specified when generating C# clients");
@@ -110,6 +114,9 @@ public partial class ClientsCommand : CommandLineCommand {
     
     [Option("--exclude-models", Description = "Specify which models should be excluded (split using | )", ShowInHelpText = true)]
     public string ExcludeModels { get; set; }
+    
+    [Option("--include-models", Description = "Specify which models should be included (split using | )", ShowInHelpText = true)]
+    public string IncludeModels { get; set; }
     
     [Option("--header", Description = "Specifies one ore more headers to be sent with the HTTP request when downloading the OpenAPI JSON (format is name: value)", ShowInHelpText = true)]
     public IEnumerable<string> Headers { get; set; }
