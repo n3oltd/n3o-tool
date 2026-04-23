@@ -1,5 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <TargetFramework>net9.0</TargetFramework>
@@ -16,8 +15,8 @@
         <PackageProjectUrl>https://n3o.ltd</PackageProjectUrl>
         <RepositoryUrl>https://github.com/n3oltd/n3o-tool</RepositoryUrl>
         <ContentTargetFolders>.</ContentTargetFolders>
+        <NoWarn>NU1605;1591</NoWarn>
     </PropertyGroup>
-
     <ItemGroup>
         <PackageReference Include="Flurl" Version="4.0.0" />
         <PackageReference Include="McMaster.Extensions.CommandLineUtils" Version="4.1.1" />
@@ -31,18 +30,15 @@
         <PackageReference Include="NSwag.CodeGeneration.TypeScript" Version="14.6.3" />
         <PackageReference Include="Spectre.Console" Version="0.54.0" />
     </ItemGroup>
-
     <ItemGroup>
         <EmbeddedResource Include="Embedded\speed.flf" />
         <EmbeddedResource Include="Embedded\Clients\ConnectApiBase.ts" />
         <EmbeddedResource Include="Embedded\Clients\package.json" />
         <EmbeddedResource Include="Embedded\Clients\tsconfig.json" />
     </ItemGroup>
-
     <ItemGroup>
         <None Update="NuGet.md">
             <Pack>True</Pack>
         </None>
     </ItemGroup>
-
 </Project>
