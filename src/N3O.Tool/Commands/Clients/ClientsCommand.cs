@@ -89,7 +89,7 @@ public partial class ClientsCommand : CommandLineCommand {
             }
 
             if (ConnectApi) {
-                headers["N3O-OpenApi-Platform"] = "3";
+                headers["N3O-OpenApi-Variant"] = "connect";
                 headers["N3O-OpenApi-ClientLanguage"] = clientLanguageCode;
             }
 

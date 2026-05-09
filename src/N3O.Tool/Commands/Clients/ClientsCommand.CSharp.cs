@@ -11,7 +11,7 @@ namespace N3O.Tool.Commands.Clients;
 
 public partial class ClientsCommand {
     private async Task GenerateCSharpClientAsync() {
-        var openApiDocument = await GetOpenApiDocumentAsync("1");
+        var openApiDocument = await GetOpenApiDocumentAsync("csharp");
 
         var settings = new CSharpClientGeneratorSettings();
 
@@ -48,7 +48,7 @@ public partial class ClientsCommand {
         var toExclude = new List<string>();
         
         foreach (var url in ExcludeModelsFrom.SplitArgs()) {
-            var openApiDocument = await GetOpenApiDocumentAsync(url, "1");
+            var openApiDocument = await GetOpenApiDocumentAsync(url, "csharp");
 
             toExclude.AddRange(openApiDocument.Components.Schemas.Keys);
         }
