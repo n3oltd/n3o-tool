@@ -10,7 +10,7 @@ namespace N3O.Tool.Commands.Clients;
 
 public partial class ClientsCommand {
     private async Task GenerateTypeScriptClientAsync(bool connectApi) {
-        var openApiDocument = await GetOpenApiDocumentAsync("2");
+        var openApiDocument = await GetOpenApiDocumentAsync("typescript");
 
         var srcFolder = System.IO.Path.Combine(OutputPath, "src");
         Directory.CreateDirectory(srcFolder);
