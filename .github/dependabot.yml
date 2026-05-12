@@ -3,7 +3,17 @@ updates:
   - package-ecosystem: "nuget"
     directory: "/src"
     schedule:
-      interval: "daily"
+      interval: "weekly"
+    groups:
+      microsoft-extensions:
+        patterns:
+          - "Microsoft.Extensions.*"
+      nswag:
+        patterns:
+          - "NSwag.*"
+      mcmaster:
+        patterns:
+          - "McMaster.*"
     ignore:
       - dependency-name: "Karakoram.*"
       - dependency-name: "K2.*"
