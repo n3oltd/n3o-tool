@@ -12,8 +12,8 @@ public class ClientFactory<T> {
         var client = (T) Activator.CreateInstance(typeof(T), httpClient);
 
         var baseUrlProperty = client.GetType().GetProperty(BaseUrl);
-        var baseUrlValue = new Url("https://n3o.cloud").AppendPathSegment(baseUrlProperty.GetValue(client))
-                                                       .ToString();
+        var baseUrlValue = new Url("https://eu1.n3o.cloud").AppendPathSegment(baseUrlProperty.GetValue(client))
+                                                           .ToString();
 
         baseUrlProperty.SetValue(client, baseUrlValue);
         

@@ -52,7 +52,7 @@ namespace N3O.Tool.Commands.Templates.Clients
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "13.18.0.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v10.0.0.0))")]
     public partial class TemplatesClient : ITemplatesClient
     {
-        private string _baseUrl = "/eu1/api/templates/";
+        private string _baseUrl = "/api/templates/";
         private System.Net.Http.HttpClient _httpClient;
         private System.Lazy<Newtonsoft.Json.JsonSerializerSettings> _settings;
 
