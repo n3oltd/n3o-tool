@@ -15,7 +15,6 @@ public class Program {
                            .AddSingleton<IConsole>(PhysicalConsole.Singleton)
                            .AddSingleton<Shell>()
                            .AddHttpClient()
-                           .AddScoped(typeof(ClientFactory<>))
                            .AddLogging(opt => {
                                opt.AddDebug();
                            })
