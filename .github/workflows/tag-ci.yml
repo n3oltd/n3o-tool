@@ -8,11 +8,12 @@ on:
 jobs:
   build-pack-push:
     name: Build, Pack, Push
+    runs-on: ubuntu-latest
     permissions:
       contents: read
       id-token: write
-    uses: n3oltd/actions/.github/workflows/dotnet-build-pack-push.yml@main
-    with:
-      run-tests: false
-      run-pack: true
-      nuget-user: n3oltd
+    steps:
+      - uses: n3oltd/actions/.github/actions/dotnet-build-pack-push@main
+        with:
+          run-pack: true
+          nuget-user: n3oltd
