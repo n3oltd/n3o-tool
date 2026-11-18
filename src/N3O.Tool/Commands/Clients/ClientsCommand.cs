@@ -69,6 +69,16 @@ public partial class ClientsCommand : CommandLineCommand {
     }
 
     private async Task<OpenApiDocument> GetOpenApiDocumentAsync(string urlOrPath, string clientLanguageCode) {
+        var json = await GetOpenApiJsonAsync(urlOrPath, clientLanguageCode);
+
+        return await OpenApiDocument.FromJsonAsync(json);
+    }
+
+    private Task<string> GetOpenApiJsonAsync(string clientLanguageCode) {
+        return GetOpenApiJsonAsync(Url ?? Path, clientLanguageCode);
+    }
+
+    private async Task<string> GetOpenApiJsonAsync(string urlOrPath, string clientLanguageCode) {
         string json;
         
         if (Uri.TryCreate(urlOrPath, UriKind.Absolute, out var url)) {
@@ -108,9 +118,7 @@ public partial class ClientsCommand : CommandLineCommand {
         
         _logger.LogDebug("Fetched {Json}", json);
 
-        var openApiDocument = await OpenApiDocument.FromJsonAsync(json);
-
-        return openApiDocument;
+        return json;
     }
 
     [Option("--connect-api", Description = "Specifies whether clients are being generated for the N3O Connect API", ShowInHelpText = true)]

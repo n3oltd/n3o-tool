@@ -1,5 +1,6 @@
 ﻿using N3O.Tool.Extensions;
 using NJsonSchema.CodeGeneration.CSharp;
+using NSwag;
 using NSwag.CodeGeneration;
 using NSwag.CodeGeneration.CSharp;
 using System.Collections.Generic;
@@ -11,7 +12,8 @@ namespace N3O.Tool.Commands.Clients;
 
 public partial class ClientsCommand {
     private async Task GenerateCSharpClientAsync() {
-        var openApiDocument = await GetOpenApiDocumentAsync("csharp");
+        var json = await GetOpenApiJsonAsync("csharp");
+        var openApiDocument = await OpenApiDocument.FromJsonAsync(json);
 
         var settings = new CSharpClientGeneratorSettings();
 
@@ -42,8 +44,16 @@ public partial class ClientsCommand {
         
         var csClient = generator.GenerateFile(ClientGeneratorOutputType.Full);
 
+        if (settings.GenerateDtoTypes) {
+            csClient = new CSharpPostProcessor().ReplaceNumberEnumsWithConstants(csClient,
+                                                                                 json,
+                                                                                 openApiDocument,
+                                                                                 typesToRemove);
+        }
+
         await File.WriteAllTextAsync(System.IO.Path.Combine(OutputPath, $"{Name}.cs"), csClient);
     }
+
     private async Task<IReadOnlyList<string>> GetTypesToExcludeAsync() {
         var toExclude = new List<string>();
         
