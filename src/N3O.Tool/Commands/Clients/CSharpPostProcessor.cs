@@ -1,59 +1,56 @@
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using NJsonSchema;
 using NSwag;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 
 namespace N3O.Tool.Commands.Clients;
 
 public class CSharpPostProcessor {
-    private static readonly Regex EnumMember = new(@"(?<name>\w+) = (?<index>\d+),");
+    private static readonly Regex NumberedEnumMember = new(@"(?<name>\w+) = (?<index>\d+),");
 
     public string ReplaceNumberEnumsWithConstants(string code,
                                                   string json,
                                                   OpenApiDocument document,
                                                   IEnumerable<string> excludedTypeNames) {
-        var root = Parse(json);
-
-        foreach (var (name, schema) in document.Components.Schemas) {
-            if (schema.Type.HasFlag(JsonObjectType.Number) &&
-                schema.Enumeration.Any() &&
-                !excludedTypeNames.Contains(name)) {
-                code = ReplaceNumberEnum(code, name, GetValues(root, name));
+        using (var openApiJson = JsonDocument.Parse(json)) {
+            foreach (var (name, schema) in document.Components.Schemas) {
+                if (schema.Type.HasFlag(JsonObjectType.Number) &&
+                    schema.Enumeration.Any() &&
+                    !excludedTypeNames.Contains(name)) {
+                    code = ReplaceNumberEnum(code, name, GetValues(name, openApiJson.RootElement));
+                }
             }
         }
 
         return code;
     }
 
-    private decimal GetValue(string name, JToken value) {
-        if (value.Type == JTokenType.Float || value.Type == JTokenType.Integer) {
-            return value.Value<decimal>();
+    private decimal GetValue(string name, JsonElement value) {
+        var text = value.GetRawText();
+
+        if (value.ValueKind == JsonValueKind.Number &&
+            decimal.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out var number) &&
+            number.ToString(CultureInfo.InvariantCulture) == text) {
+            return number;
         } else {
-            throw new Exception($"The number enum {name} has the value {value.ToString(Formatting.None)}, " +
-                                "which is not a number");
+            throw new Exception($"The number enum {name} has the value {text}, which a decimal cannot hold exactly");
         }
     }
 
-    private IReadOnlyList<decimal> GetValues(JToken root, string name) {
-        if (root["components"]?["schemas"]?[name]?["enum"] is JArray values) {
-            return values.Select(x => GetValue(name, x)).ToList();
+    private IReadOnlyList<decimal> GetValues(string name, JsonElement root) {
+        if (root.TryGetProperty("components", out var components) &&
+            components.TryGetProperty("schemas", out var schemas) &&
+            schemas.TryGetProperty(name, out var schema) &&
+            schema.TryGetProperty("enum", out var values) &&
+            values.ValueKind == JsonValueKind.Array) {
+            return values.EnumerateArray().Select(x => GetValue(name, x)).ToList();
         } else {
             throw new Exception($"The number enum {name} has no enum under components.schemas in the document");
-        }
-    }
-
-    private JToken Parse(string json) {
-        using (var reader = new JsonTextReader(new StringReader(json))) {
-            reader.FloatParseHandling = FloatParseHandling.Decimal;
-
-            return JToken.ReadFrom(reader);
         }
     }
 
@@ -68,7 +65,7 @@ public class CSharpPostProcessor {
 
         var declaration = declarations[0];
         var indent = declaration.Groups["indent"].Value;
-        var members = EnumMember.Matches(declaration.Groups["members"].Value);
+        var members = NumberedEnumMember.Matches(declaration.Groups["members"].Value);
 
         if (members.Count != values.Count) {
             throw new Exception($"The C# enum {name} has {members.Count} members but its schema has " +

@@ -12,7 +12,7 @@ namespace N3O.Tool.Commands.Clients;
 
 public partial class ClientsCommand {
     private async Task GenerateCSharpClientAsync() {
-        var json = await GetOpenApiJsonAsync(Url ?? Path, "csharp");
+        var json = await GetOpenApiJsonAsync("csharp");
         var openApiDocument = await OpenApiDocument.FromJsonAsync(json);
 
         var settings = new CSharpClientGeneratorSettings();

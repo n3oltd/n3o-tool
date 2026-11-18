@@ -74,6 +74,10 @@ public partial class ClientsCommand : CommandLineCommand {
         return await OpenApiDocument.FromJsonAsync(json);
     }
 
+    private Task<string> GetOpenApiJsonAsync(string clientLanguageCode) {
+        return GetOpenApiJsonAsync(Url ?? Path, clientLanguageCode);
+    }
+
     private async Task<string> GetOpenApiJsonAsync(string urlOrPath, string clientLanguageCode) {
         string json;
         
